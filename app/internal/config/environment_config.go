@@ -30,7 +30,7 @@ type EnvironmentConfig struct {
 }
 
 func GetHostName() string {
-	return "GO_RabbitMqFilter"+NewEnvironmentConfig().HostName
+	return "go_rabbitmq_log" + NewEnvironmentConfig().HostName
 }
 
 func NewEnvironmentConfig() *EnvironmentConfig {

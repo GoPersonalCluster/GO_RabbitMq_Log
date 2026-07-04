@@ -1,2 +1,8 @@
 github.com/GoPersonalCluster/GO_RabbitMqHandler v0.0.0-20260702233052-26d775779905 h1:OdjvcdNrEXvGRG9ZCdpC4BdRmQSbbORtXpuuCBIGTPE=
 github.com/GoPersonalCluster/GO_RabbitMqHandler v0.0.0-20260702233052-26d775779905/go.mod h1:MC14IvTEgp0Qow4H9246LvWWdA14HKxAlYyFM7uRoK4=
+github.com/GoPersonalCluster/go_rabbitMq_filter v0.0.0-20260703232729-2e39832249e8 h1:afEcmKDJomT1PwgnLAtYWZVVJXfa5P28dm3Xp0TLlRY=
+github.com/GoPersonalCluster/go_rabbitMq_filter v0.0.0-20260703232729-2e39832249e8/go.mod h1:rYFo3wdBis1u5AVIW4Zf0TrrFDl3k/wf1iii8SPEYP4=
+github.com/lib/pq v1.12.3 h1:tTWxr2YLKwIvK90ZXEw8GP7UFHtcbTtty8zsI+YjrfQ=
+github.com/lib/pq v1.12.3/go.mod h1:/p+8NSbOcwzAEI7wiMXFlgydTwcgTr3OSKMsD2BitpA=
+github.com/streadway/amqp v1.1.0 h1:py12iX8XSyI7aN/3dUT8DFIDJazNJsVJdxNVEpnQTZM=
+github.com/streadway/amqp v1.1.0/go.mod h1:WYSrTEYHOXHd0nwFeUXAe2G2hRnQT+deZJJf88uS9Bg=
