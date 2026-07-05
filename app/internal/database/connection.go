@@ -1,21 +1,20 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/config"
-	_ "github.com/lib/pq"
+	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/models"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-type Database struct {
-	DB *sql.DB
-}
+var DB *gorm.DB
 
-func New(host, port, user, password, dbname string) (*Database, error) {
+func Connect() {
 	config := config.NewEnvironmentConfig()
-
-	connStr := fmt.Sprintf(
+	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.PostgresHost,
 		config.PostgresPort,
@@ -23,21 +22,15 @@ func New(host, port, user, password, dbname string) (*Database, error) {
 		config.PostgresPassword,
 		config.PostgresDB,
 	)
-
-	db, err := sql.Open("postgres", connStr)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
 
-	if err = db.Ping(); err != nil {
-		return nil, err
+	DB = db
+
+	err = DB.AutoMigrate(&models.ErrorLog{}, &models.PipelineLog{})
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	return &Database{
-		DB: db,
-	}, nil
-}
-
-func (d *Database) Close() error {
-	return d.DB.Close()
 }

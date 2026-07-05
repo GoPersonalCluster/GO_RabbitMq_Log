@@ -1,10 +1,7 @@
 package log
 
 import (
-	"errors"
-
 	"github.com/GoPersonalCluster/GO_RabbitMqHandler/app/service/consumer"
-	"github.com/GoPersonalCluster/go_rabbitMq_filter/app/config"
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/log/strategy"
 )
 
@@ -13,24 +10,20 @@ type FilterFactory struct {
 }
 
 func (c *FilterFactory) CreateStrategy(event *consumer.IntegrationEvent) (consumer.StrategyHandler, error) {
-
 	switch event.EventName {
-	case "PII":
-		return c.GetPIIQueue(event)
-	default:
-		return nil, c.GetDefaultErrorResponse(event)
+	case "ErrorLog":
+		return c.GetErrorQueue(event)
+	case "PipelineLog":
+		return c.GetPipelineQueue(event)
 	}
 }
 
-func (c *FilterFactory) GetDefaultErrorResponse(event *consumer.IntegrationEvent) error {
-	event.CreateMetaHeader(config.GetHostName(), "ErrorMatchingEvent")
-	return errors.New(event.EventName + "event not found")
+func (c *FilterFactory) GetErrorQueue(event *consumer.IntegrationEvent) (consumer.StrategyHandler, error) {
+	strategy := strategy.ErrorLogStrategy{}
+	return strategy.New(event)
 }
 
-
-func (c *FilterFactory) GetPIIQueue(event *consumer.IntegrationEvent) (consumer.StrategyHandler, error) {
-	strategy := strategy.LogStrategy{}
-	
-
+func (c *FilterFactory) GetPipelineQueue(event *consumer.IntegrationEvent) (consumer.StrategyHandler, error) {
+	strategy := strategy.PipelineLogStrategy{}
 	return strategy.New(event)
 }
