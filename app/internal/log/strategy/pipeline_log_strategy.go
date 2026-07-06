@@ -23,7 +23,15 @@ func (pQS *PipelineLogStrategy) New(iE *consumer.IntegrationEvent) (consumer.Str
 }
 
 func (pQS *PipelineLogStrategy) Start() ([]byte, error) {
+	for _, header := range pQS.event.MetaHeader {
+		log := models.PipelineLog{
+			
+			Description: fmt.Sprintf("%s %s %s", header.EventName, header.Source, header.OccuredAt),
+		}
 
+		database.DB.Create(&log)
+
+	}
 	return nil, nil
 }
 
