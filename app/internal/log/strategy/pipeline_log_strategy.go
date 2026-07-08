@@ -1,9 +1,6 @@
 package strategy
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"github.com/GoPersonalCluster/GO_RabbitMqHandler/app/service/consumer"
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/config"
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/database"
@@ -23,39 +20,11 @@ func (pQS *PipelineLogStrategy) New(iE *consumer.IntegrationEvent) (consumer.Str
 }
 
 func (pQS *PipelineLogStrategy) Start() ([]byte, error) {
+
 	for _, header := range pQS.event.MetaHeader {
-		log := models.PipelineLog{
-			
-			Description: fmt.Sprintf("%s %s %s", header.EventName, header.Source, header.OccuredAt),
-		}
 
+		log := models.NewPipelineLog(pQS.event.ID, header.Source, header.EventName, header.Args)
 		database.DB.Create(&log)
-
-	}
-	return nil, nil
-}
-
-func (pQS *ErrorLogStrategy) Start() ([]byte, error) {
-
-	json, err := json.Marshal(pQS.event.MetaHeader)
-	if err != nil {
-
-		last := pQS.event.MetaHeader[len(pQS.event.MetaHeader)-2]
-		log := models.ErrorLog{
-			Event:       pQS.event.EventName,
-			Description: fmt.Sprintf("error during parsing:%s %s %s", last.EventName, last.Source, last.OccuredAt),
-		}
-		database.DB.Create(&log)
-
-		return nil, err
-	} else {
-
-		log := models.ErrorLog{
-			Event:       pQS.event.EventName,
-			Description: string(json),
-		}
-		database.DB.Create(&log)
-
 	}
 
 	return nil, nil

@@ -3,11 +3,12 @@ module github.com/GoPersonalCluster/go_rabbitmq_log
 go 1.23
 
 require (
-	github.com/GoPersonalCluster/GO_RabbitMqHandler v0.0.0-20260702233052-26d775779905
+	github.com/GoPersonalCluster/GO_RabbitMqHandler v0.0.0-20260706232745-7f3fe0b56a02
 	github.com/GoPersonalCluster/go_rabbitMq_filter v0.0.0-20260703232729-2e39832249e8
 )
 
 require (
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.6.0 // indirect

@@ -30,7 +30,7 @@ func (pQS *ErrorLogStrategy) Start() ([]byte, error) {
 		last := pQS.event.MetaHeader[len(pQS.event.MetaHeader)-2]
 		log := models.ErrorLog{
 			Event:       pQS.event.EventName,
-			Description: fmt.Sprintf("error during parsing:%s %s %s", last.EventName, last.Source, last.OccuredAt),
+			Description: fmt.Sprintf("error during parsing:%s %s %d", last.EventName, last.Source, last.OccuredAt),
 		}
 		database.DB.Create(&log)
 
