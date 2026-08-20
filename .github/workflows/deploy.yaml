@@ -18,7 +18,7 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: gopersonalcluster/go-rabbitmq-log
-  KUBE_NODE: kube-node-1
+  KUBE_NODE: kubelet-node-1
 
 jobs:
   deploy:
