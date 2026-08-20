@@ -18,13 +18,13 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: gopersonalcluster/go-rabbitmq-log
+  KUBE_NODE: kube-node-1
 
 jobs:
   deploy:
     name: Deploy Golang app
     runs-on: ubuntu-latest
 
-    # Não faz deploy se o workflow Build terminou com erro
     if: >
       github.event_name == 'push' ||
       github.event.workflow_run.conclusion == 'success'
@@ -45,8 +45,6 @@ jobs:
           username: ${{ secrets.GO_PERSONAL_CLUSTER_ACTOR }}
           password: ${{ secrets.GO_PERSONAL_CLUSTER_TOKEN }}
 
-      # Nome EXATO do package no GHCR:
-      # ghcr.io/gopersonalcluster/go-rabbitmq-log/go-rabbitmq-log
       - name: Definir imagem
         run: |
           echo "IMAGE=ghcr.io/gopersonalcluster/go-rabbitmq-log" >> "$GITHUB_ENV"
@@ -78,17 +76,37 @@ jobs:
           kubectl cluster-info
           kubectl get namespaces
 
+      - name: Validar node Kubernetes
+        run: |
+          echo "Verificando node ${KUBE_NODE}..."
+
+          kubectl get node "${KUBE_NODE}"
+
+          echo
+          echo "Status do node:"
+          kubectl get node "${KUBE_NODE}" \
+            -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+
+          echo
+
       - name: Mostrar namespace.yaml
         run: |
           echo "========== namespace.yaml =========="
           cat k8s/namespace.yaml
           echo "===================================="
 
+      - name: Mostrar deployment.yaml
+        run: |
+          echo "========== deployment.yaml =========="
+          cat k8s/deployment.yaml
+          echo "====================================="
+
       - name: Aplicar Kubernetes
         run: |
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/postgresql.yaml
 
       - name: Atualizar imagem
         run: |
@@ -99,6 +117,8 @@ jobs:
 
       - name: Verificar imagem configurada
         run: |
+          echo "Imagem configurada:"
+
           kubectl -n ci get deployment go-rabbitmq-log \
             -o jsonpath='{.spec.template.spec.containers[0].image}'
 
@@ -112,4 +132,18 @@ jobs:
 
       - name: Verificar Pods
         run: |
-          kubectl get pods -n ci -o wide
+          echo "Pods do RabbitMQ Log:"
+
+          kubectl get pods \
+            -n ci \
+            -o wide \
+            -l app=go-rabbitmq-log
+
+      - name: Verificar node dos Pods
+        run: |
+          echo "Node onde o Pod está executando:"
+
+          kubectl get pods \
+            -n ci \
+            -l app=go-rabbitmq-log \
+            -o custom-columns="POD:.metadata.name,NODE:.spec.nodeName,STATUS:.status.phase"
