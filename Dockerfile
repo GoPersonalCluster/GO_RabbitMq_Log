@@ -22,10 +22,10 @@ ENV rabbitmq_username=admin \
     rabbitmq_port=5672 \
     postgres_host=postgres \
     postgres_port=5432 \
-    postgres_db=pg_rabbitmq \
+    postgres_db=pg_rabbitmq_log \
     postgres_user=postgres \
     postgres_password=postgres \
-    host_name=filterQueue
+    host_name=log_queue
 
 COPY --from=build /app/golang-app .
 
