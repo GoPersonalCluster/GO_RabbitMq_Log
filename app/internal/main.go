@@ -6,6 +6,7 @@ import (
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/database"
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/log"
 	"net/http"
+	"log"
 )
 
 func main() {
