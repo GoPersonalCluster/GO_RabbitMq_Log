@@ -5,6 +5,7 @@ import (
 	"github.com/GoPersonalCluster/GO_RabbitMqHandler/app/service/consumer"
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/database"
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/log"
+	"net/http"
 )
 
 func main() {
@@ -29,7 +30,7 @@ func main() {
 
 	service.AddConsumer("log_queue", &filterConsumer)
 	service.Start()
-	
+
 		http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
