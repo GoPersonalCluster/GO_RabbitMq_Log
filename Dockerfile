@@ -18,9 +18,9 @@ WORKDIR /app
 
 ENV rabbitmq_username=admin \
     rabbitmq_password=admin \
-    rabbitmq_host=127.0.0.1 \
+    rabbitmq_host=rabbitmq \
     rabbitmq_port=5672 \
-    postgres_host=postgres \
+    postgres_host=postgresql \
     postgres_port=5432 \
     postgres_db=pg_rabbitmq_log \
     postgres_user=postgres \
