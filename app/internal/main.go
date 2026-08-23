@@ -1,12 +1,13 @@
 package main
 
 import (
+	"net/http"
+	stdlog "log"
+
 	"github.com/GoPersonalCluster/GO_RabbitMqHandler/app/service"
 	"github.com/GoPersonalCluster/GO_RabbitMqHandler/app/service/consumer"
 	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/database"
-	"github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/log"
-	"net/http"
-	"log"
+	applog "github.com/GoPersonalCluster/go_rabbitmq_log/app/internal/log"
 )
 
 func main() {
@@ -14,7 +15,7 @@ func main() {
 	service := service.RabbitMQConfigComposite{}
 	service.ConfigureConnection()
 
-	logCommand := log.LogFactory{}
+	logCommand := applog.LogFactory{}
 
 	filterConsumer := consumer.FilterConsumer{}
 	config := consumer.ConsumerConfig{}
@@ -32,10 +33,10 @@ func main() {
 	service.AddConsumer("log_queue", &filterConsumer)
 	service.Start()
 
-		http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	log.Println("[main] servidor HTTP ouvindo na porta 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	stdlog.Println("[main] servidor HTTP ouvindo na porta 8080")
+	stdlog.Fatal(http.ListenAndServe(":8080", nil))
 }
